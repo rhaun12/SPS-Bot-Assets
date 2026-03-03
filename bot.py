@@ -10,8 +10,10 @@ class MyClient(discord.Client):
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
-        # Sync slash commands globally
-        await self.tree.sync()
+        # This runs every time the bot starts
+        print("Syncing slash commands...")
+        synced = await self.tree.sync()  # Global sync
+        print(f"Synced {len(synced)} command(s)")
 
 client = MyClient()
 
@@ -24,5 +26,10 @@ async def hello(interaction: discord.Interaction):
     await interaction.response.send_message(
         f"Hello, {interaction.user.mention}!"
     )
+
+@client.event
+async def on_ready():
+    print(f"Logged in as {client.user} (ID: {client.user.id})")
+    print("------")
 
 client.run(TOKEN)
